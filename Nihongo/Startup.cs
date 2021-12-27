@@ -35,10 +35,10 @@ namespace Nihongo.Api
             services.ConfigureMySqlContext(Configuration);  
             services.ConfigureRepositoryWrapper();
             services.ConfigureAutoMapper();
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(new ValidationActionFilter());
-            });
+            services.ConfigureMicrosoftWebApiAuthentication(Configuration);
+            services.ConfigureValidationActionFilter();
+            services.ConfigureValidateEntityExistsFilter();
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RoadToDevops", Version = "v1" });
@@ -60,6 +60,8 @@ namespace Nihongo.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

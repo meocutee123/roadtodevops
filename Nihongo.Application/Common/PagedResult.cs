@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace RoadToDevops.Common
+namespace Nihongo.Application.Common
 {
     public class PagedResult<T>
     {

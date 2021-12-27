@@ -1,4 +1,4 @@
-﻿namespace Nihongo.Api.Common
+﻿namespace Nihongo.Application.Common
 {
     public static class Constants
     {

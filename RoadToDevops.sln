@@ -5,16 +5,16 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nihongo.Api", "Nihongo\Nihongo.Api.csproj", "{B50956F3-D324-4EC3-B594-683C95B44D47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nihongo.Entites", "Entites\Nihongo.Entites.csproj", "{6A312FFB-1427-4CC1-8DF2-AF6316F5DE3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nihongo.Entites", "Entites\Nihongo.Entites.csproj", "{6A312FFB-1427-4CC1-8DF2-AF6316F5DE3E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{71D4ED98-1D6F-47DF-8894-94B1D6F08764}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nihongo.Application", "Nihongo.Application\Nihongo.Application.csproj", "{257E6DFC-3ED3-4CFF-B3B0-D07A1D952F34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nihongo.Application", "Nihongo.Application\Nihongo.Application.csproj", "{257E6DFC-3ED3-4CFF-B3B0-D07A1D952F34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nihongo.Repository", "Nihongo.Repository\Nihongo.Repository.csproj", "{CDAC3C0F-0B92-420F-9CBA-883BD1B0AFB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nihongo.Repository", "Nihongo.Repository\Nihongo.Repository.csproj", "{CDAC3C0F-0B92-420F-9CBA-883BD1B0AFB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

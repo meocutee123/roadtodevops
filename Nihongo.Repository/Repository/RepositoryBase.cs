@@ -18,11 +18,9 @@ namespace Nihongo.Repository.Repository
         {
             this._dbContext = dbContext;
         }
-        public async Task<T> AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
-            return entity;
         }
 
         public async Task DeleteAsync(int id)
@@ -33,7 +31,11 @@ namespace Nihongo.Repository.Repository
                 throw new Exception("Something went wrong, please try again");
             }
             await Task.FromResult(_dbContext.Remove(entity));
-            await _dbContext.SaveChangesAsync();
+        }
+
+        public IQueryable<T> GetAllAsync()
+        {
+            return _dbContext.Set<T>().AsNoTracking();
         }
 
         public async Task<IList<T>> GetByConditionAsync(Expression<Func<T, bool>> expression)
@@ -45,12 +47,7 @@ namespace Nihongo.Repository.Repository
         public async Task UpdateAsync(T entity)
         {
             await Task.FromResult(_dbContext.Set<T>().Update(entity));
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IList<T>> GetAllAsync()
-        {
-            return await _dbContext.Set<T>().ToListAsync();
-        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Nihongo.Api.Commands.Kanji
+namespace Nihongo.Application.Commands.Kanji
 {
     public class AddKanjiRequest
     {

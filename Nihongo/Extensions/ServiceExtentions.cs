@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nihongo.Api.Common.Mappings;
+using Microsoft.Identity.Web;
+using Nihongo.Api.Filters;
+using Nihongo.Application.Common.Mappings;
 using Nihongo.Application.Repository;
 using Nihongo.Entites.Models;
 using Nihongo.Repository;
@@ -27,6 +29,18 @@ namespace Nihongo.Api.Extensions
             {
                 mc.AddProfile(new MappingProfile());
             }).CreateMapper());
+        }
+        public static void ConfigureMicrosoftWebApiAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMicrosoftIdentityWebApiAuthentication(configuration);
+        }
+        public static void ConfigureValidationActionFilter(this IServiceCollection services)
+        {
+            services.AddScoped<ValidateFilterAttribute>();
+        }
+        public static void ConfigureValidateEntityExistsFilter(this IServiceCollection services)
+        {
+            services.AddScoped<ValidateEntityExistsAttribute<Kanji>>();
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Nihongo.Api.Commands.Kanji;
+using Nihongo.Api.Filters;
+using Nihongo.Application.Commands.Kanji;
+using Nihongo.Application.Dtos;
 using Nihongo.Application.Repository;
 using Nihongo.Entites.Models;
 using RoadToDevops;
-using RoadToDevops.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,36 +34,46 @@ namespace Nihongo.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<PagedResult<Kanji>> Get([FromQuery] GetAllKanjiPagingRequest request)
+        public async Task<List<KanjiDto>> Get([FromQuery] GetAllKanjiPagingRequest request)
         {
-            var Kanji = await _repository.Kanji.GetAllAsync();
-            return new PagedResult<Kanji>() { Data = Kanji, TotalRecord = Kanji.Count, Code = 200 };
+            var Kanji = _mapper.Map<List<KanjiDto>>(await _repository.Kanji.GetAllKanjiAsync(request));
+            return Kanji;
         }
-        [HttpGet("{id}")]
-        public async Task<PagedResult<Kanji>> GetById(int id)
+
+        [HttpGet("{id}", Name = "GetById")]
+        [ServiceFilter(typeof(ValidateEntityExistsAttribute<Kanji>))]
+        public async Task<KanjiDto> GetById(int id)
         {
-            var Kanji = await _repository.Kanji.GetByConditionAsync(k => k.Id == id);
-            return new PagedResult<Kanji>() { Data = Kanji, TotalRecord = Kanji.Count, Code = 200 };
+            return _mapper.Map<KanjiDto>(await Task.FromResult(HttpContext.Items["entity"] as Kanji));
         }
+
         [HttpPost]
-        public async Task<PagedResult<Kanji>> Create([FromBody] AddKanjiRequest request)
+        [ServiceFilter(typeof(ValidateFilterAttribute))]
+        public async Task<CreatedAtRouteResult> Create([FromBody] AddKanjiRequest request)
         {
             var entity = _mapper.Map<Kanji>(request);
-            var response = await _repository.Kanji.AddAsync(entity);
-            return new PagedResult<Kanji>() { Data = new List<Kanji>() { response }, Code = 200 };
+            await _repository.Kanji.AddAsync(entity);
+            await _repository.SaveChangesAsync();
+            var Kanji = _mapper.Map<KanjiDto>(entity);
+            return CreatedAtRoute("GetById", new { id = Kanji.Id }, Kanji);
         }
         [HttpPut]
-        public async Task<PagedResult<Kanji>> Update([FromBody] UpdateKanjiRequest request)
+        [ServiceFilter(typeof(ValidateFilterAttribute))]
+        [ServiceFilter(typeof(ValidateEntityExistsAttribute<Kanji>))]
+        public async Task<NoContentResult> Update([FromBody] UpdateKanjiRequest request)
         {
             var entity = _mapper.Map<Kanji>(request);
             await _repository.Kanji.UpdateAsync(entity);
-            return new PagedResult<Kanji>() { Message = "Update successfully", Code = 200 };
+            await _repository.SaveChangesAsync();
+            return NoContent();
         }
         [HttpDelete("{id}")]
-        public async Task<PagedResult<Kanji>> Delete(int id)
+        [ServiceFilter(typeof(ValidateEntityExistsAttribute<Kanji>))]
+        public async Task<NoContentResult> Delete(int id)
         {
             await _repository.Kanji.DeleteAsync(id);
-            return new PagedResult<Kanji>() { Message = "Delete successfully", Code = 200 };
+            await _repository.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

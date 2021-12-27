@@ -1,4 +1,5 @@
-﻿using Nihongo.Entites.Models;
+﻿using Nihongo.Application.Commands.Kanji;
+using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace Nihongo.Application.Repository.Interfaces
 {
     public interface IKanjiRepository : IRepositoryBase<Kanji>
     {
+        Task<IEnumerable<Kanji>> GetAllKanjiAsync(GetAllKanjiPagingRequest request);
     }
 }

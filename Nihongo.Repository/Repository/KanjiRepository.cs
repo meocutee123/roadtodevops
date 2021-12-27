@@ -1,4 +1,6 @@
-﻿using Nihongo.Application.Repository.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Nihongo.Application.Commands.Kanji;
+using Nihongo.Application.Repository.Interfaces;
 using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,14 @@ namespace Nihongo.Repository.Repository
     {
         public KanjiRepository(NihongoContext dbContext) : base(dbContext)
         {
+        }
+
+        public async Task<IEnumerable<Kanji>> GetAllKanjiAsync(GetAllKanjiPagingRequest request)
+        {
+            return await GetAllAsync().OrderBy(k => k.Romanization)
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync();
         }
     }
 }
