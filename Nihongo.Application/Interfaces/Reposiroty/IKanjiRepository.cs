@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nihongo.Application.Repository.Interfaces
+namespace Nihongo.Application.Interfaces.Reposiroty
 {
     public interface IKanjiRepository : IRepositoryBase<Kanji>
     {

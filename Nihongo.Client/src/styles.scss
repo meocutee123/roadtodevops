@@ -1,0 +1,56 @@
+@font-face {
+  font-family: windows95;
+  src: url(../src/assets/fonts/W95FA/w95fa.woff);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: windows95;
+}
+.border {
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+}
+.border-light {
+  border-left: 1px solid #000;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  &:focus-visible {
+    outline: none ;
+  }
+}
+.d-flex{
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
+.justify-content-around {
+  justify-content: space-around;
+}
+.button-default {
+  padding: 2px;
+  cursor: pointer;
+  background-color: #c6c6c6;
+  &:active {
+    transform: translateY(1px);
+  }
+}
+.button-default.md {
+  width: 55px;
+  margin: 3px 0;
+}
+.mt-0{
+  margin-top: 0;
+}
+input {
+  padding-left: 3px;
+  font-family: windows95;
+}

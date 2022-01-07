@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Nihongo.Api.Extensions;
 using Nihongo.Api.Filters;
-using Nihongo.Application.Repository;
+using Nihongo.Application.Interfaces;
 using Nihongo.Entites.Models;
 using Nihongo.Repository;
 using System;
@@ -32,12 +32,13 @@ namespace Nihongo.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureMySqlContext(Configuration);  
+            services.ConfigureMySqlContext(Configuration);
+            services.ConfigureAuthentication(Configuration);
             services.ConfigureRepositoryWrapper();
             services.ConfigureAutoMapper();
-            services.ConfigureMicrosoftWebApiAuthentication(Configuration);
             services.ConfigureValidationActionFilter();
             services.ConfigureValidateEntityExistsFilter();
+            services.ConfigureCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

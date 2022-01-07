@@ -1,0 +1,6 @@
+<h2>My Heroes</h2>
+<ul *ngIf="heroes.length" class="heroes">
+  <li *ngFor="let hero of heroes" >
+    <a routerLink="/detail/{{hero.id}}">{{hero.name}}</a>
+  </li>
+</ul>

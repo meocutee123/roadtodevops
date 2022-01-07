@@ -1,5 +1,5 @@
-﻿using Nihongo.Application.Repository;
-using Nihongo.Application.Repository.Interfaces;
+﻿using Nihongo.Application.Interfaces;
+using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Entites.Models;
 using Nihongo.Repository.Repository;
 using System;
@@ -12,8 +12,10 @@ namespace Nihongo.Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private NihongoContext _dbContext;
+        private readonly NihongoContext _dbContext;
         private IKanjiRepository _kanji;
+        private IUserRepository _user;
+        private IRefreshTokenRepository _refreshToken;
 
         public RepositoryWrapper(NihongoContext nihongoContext)
         {
@@ -28,6 +30,29 @@ namespace Nihongo.Repository
                     _kanji = new KanjiRepository(_dbContext);
                 }
                 return _kanji;
+            }
+        }
+
+        public IUserRepository User {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new UserRepository(_dbContext);
+                }
+                return _user;
+            }
+        }
+
+        public IRefreshTokenRepository RefreshToken
+        {
+            get
+            {
+                if (_refreshToken == null)
+                {
+                    _refreshToken = new RefreshTokenRepository(_dbContext);
+                }
+                return _refreshToken;
             }
         }
 

@@ -14,6 +14,12 @@ namespace Nihongo.Application.Common.Mappings
             CreateMap<Kanji, AddKanjiRequest>();
             CreateMap<AddKanjiRequest, Kanji>();
             CreateMap<UpdateKanjiRequest, Kanji>();
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+
+            CreateMap<RefreshToken, RefreshTokenDto>();
+            CreateMap<RefreshTokenDto, RefreshToken>();
         }
     }
 }

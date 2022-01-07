@@ -9,6 +9,7 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseCors("enableCORS");
         }
     }
 }

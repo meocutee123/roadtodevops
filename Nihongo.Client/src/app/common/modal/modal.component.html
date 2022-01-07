@@ -1,0 +1,48 @@
+<div class="modal border">
+  <div class="header">
+    <div class="header-top">
+      <div class="title">
+        <div title>
+          Welcome to Windows
+        </div>
+      </div>
+      <div class="actions">
+        <button class="action border">?</button>
+        <button class="action border">X</button>
+      </div>
+    </div>
+    <div class="banner">
+      <img id="my-banner" banner src="../../../assets/images/banner.png" />
+    </div>
+  </div>
+  <div class="body">
+     <div class="content d-flex justify-content-between">
+      <div>
+        <img src="../../../assets/images/key_win_alt-2.png" />
+      </div>
+      <div class="form">
+        <form action="">
+          <div class="description">
+            <p>Type a usename and password to log on to Windows</p>
+          </div>
+          <div class="form-control">
+            <label for="username">User name</label>
+            <input class="border-light" type="text" name="username" id="username" [(ngModel)]="credentials.username"/>
+          </div>
+          <div class="form-control">
+            <label for="password">Password</label>
+            <input class="border-light" type="password" name="password" id="password" [(ngModel)]="credentials.password"/>
+          </div>
+        </form>
+      </div>
+      <div class="form-actions d-flex flex-column">
+        <button class="button-default border md mt-0" [disabled]="isDisabled" (click)="login()">OK</button>
+        <button class="button-default border md" (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="footer"></div>
+</div>

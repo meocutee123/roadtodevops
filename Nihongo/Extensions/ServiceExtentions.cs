@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Nihongo.Api.Filters;
 using Nihongo.Application.Common.Mappings;
-using Nihongo.Application.Repository;
+using Nihongo.Application.Common.Settings;
+using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Entites.Models;
 using Nihongo.Repository;
+using System.Text;
 
 namespace Nihongo.Api.Extensions
 {
@@ -18,6 +23,45 @@ namespace Nihongo.Api.Extensions
             services.AddDbContext<NihongoContext>(o =>
                     o.UseSqlServer(
                         configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                RequireExpirationTime = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:key"]))
+            };
+
+            services.AddSingleton(tokenValidationParameters);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = tokenValidationParameters;
+                });
+        }
+        public static void ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("enableCORS", builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
+            });
         }
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
@@ -29,10 +73,6 @@ namespace Nihongo.Api.Extensions
             {
                 mc.AddProfile(new MappingProfile());
             }).CreateMapper());
-        }
-        public static void ConfigureMicrosoftWebApiAuthentication(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddMicrosoftIdentityWebApiAuthentication(configuration);
         }
         public static void ConfigureValidationActionFilter(this IServiceCollection services)
         {

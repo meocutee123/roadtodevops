@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Nihongo.Api.Filters;
 using Nihongo.Application.Commands.Kanji;
 using Nihongo.Application.Dtos;
-using Nihongo.Application.Repository;
+using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Entites.Models;
 using RoadToDevops;
 using System;
@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 namespace Nihongo.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class KanjiController : ControllerBase
     {

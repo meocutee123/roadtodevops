@@ -1,0 +1,10 @@
+<form #heroForm="ngForm">
+  <div class="form-group">
+    <label for="power">Hero Power</label>
+    <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" name="name">
+    TODO: remove this: {{model.name}}
+    <select class="form-control" id="power" required>
+      <option *ngFor="let pow of powers" [value]="pow">{{pow}}</option>
+    </select>
+  </div>
+</form>

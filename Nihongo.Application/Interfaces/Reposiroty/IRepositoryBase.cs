@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nihongo.Application.Repository.Interfaces
+namespace Nihongo.Application.Interfaces.Reposiroty
 {
     public interface IRepositoryBase<T>
     {
@@ -14,5 +14,6 @@ namespace Nihongo.Application.Repository.Interfaces
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
+        Task<T> FindAsync(Expression<Func<T, bool>> expression);
     }
 }

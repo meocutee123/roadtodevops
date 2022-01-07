@@ -1,0 +1,19 @@
+.desktop-icon{
+  padding: .3rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 50px;
+    margin-bottom: .2em;
+  }
+  span {
+    color: white;
+  }
+}
+.desktop-icon.icon-focus {
+  background-color: rgb(106, 188, 255);
+}
+

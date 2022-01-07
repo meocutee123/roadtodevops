@@ -1,0 +1,17 @@
+.startbar-wrapper{
+  width: 100%;
+  padding: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #c0c0c0;
+  display: flex;
+  align-items: center;
+  .start-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+  }
+}

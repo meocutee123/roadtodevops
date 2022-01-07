@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nihongo.Application.Repository.Interfaces;
+using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,11 @@ namespace Nihongo.Repository.Repository
                 throw new Exception("Something went wrong, please try again");
             }
             await Task.FromResult(_dbContext.Remove(entity));
+        }
+
+        public async Task<T> FindAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _dbContext.Set<T>().Where(expression).FirstOrDefaultAsync();
         }
 
         public IQueryable<T> GetAllAsync()

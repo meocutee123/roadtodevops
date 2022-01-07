@@ -18,12 +18,14 @@ namespace Nihongo.Entites.Models
         }
 
         public virtual DbSet<Kanji> Kanjis { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=NTUANNGHIA\\SQLEXPRESS;Database=Nihongo;Trusted_Connection=true;");
+                optionsBuilder.UseSqlServer("Server=NTUANNGHIA\\SQLEXPRESS;Database=Nihongo;Trusted_Connection=true;");
             }
         }
 

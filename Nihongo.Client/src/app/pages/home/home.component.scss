@@ -1,0 +1,56 @@
+.home-wrapper{
+  position: relative;
+  width: 1000px;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  .window {
+    width: 600px;
+    height: 300px;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 9;
+    .toolbar{
+      cursor: move;
+      width: 100%;
+      height: 25px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background-color: navy;
+      padding: 0 5px;
+      .name {
+        color: white;
+      }
+      .actions {
+        display: flex;
+        position: absolute;
+        right: 5px;
+        .action {
+          width: 16px;
+          height: 16px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: black;
+          background-color: #c6c6c6;
+          margin-right: 3px;
+          cursor: pointer;
+          font-size: 12px;
+          padding: 1px 2px 0 0;
+          &:last-child{
+            margin-right: 0;
+          }
+        }
+      }
+    }
+    .body{
+      background-color: #c6c6c6;
+      width: 100%;
+      height: 271px;
+      padding: 10px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nihongo.Application.Commands.Kanji;
-using Nihongo.Application.Repository.Interfaces;
+using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace Nihongo.Repository.Repository
         public async Task<IEnumerable<Kanji>> GetAllKanjiAsync(GetAllKanjiPagingRequest request)
         {
             return await GetAllAsync().OrderBy(k => k.Romanization)
-                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Skip((request.PageIndex) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync();
         }
