@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -7,17 +9,20 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Entites.Models
 {
+    [Owned]
     public class RefreshToken
     {
+        [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public bool IsUsed { get; set; }
-        public string JwtId { get; set; }
-        public DateTime ExpiryDate { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public Account Account { get; set; }
         public string Token { get; set; }
-        public bool IsRevork { get; set; }
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public DateTime Expires { get; set; }
+        public bool IsExpired => DateTime.UtcNow >= Expires;
+        public DateTime Created { get; set; }
+        public string CreatedByIp { get; set; }
+        public DateTime? Revoked { get; set; }
+        public string RevokedByIp { get; set; }
+        public string ReplacedByToken { get; set; }
+        public bool IsActive => Revoked == null && !IsExpired;
     }
 }

@@ -35,6 +35,7 @@ namespace Nihongo.Api
             services.ConfigureMySqlContext(Configuration);
             services.ConfigureAuthentication(Configuration);
             services.ConfigureRepositoryWrapper();
+            services.ConfigureAppServices();
             services.ConfigureAutoMapper();
             services.ConfigureValidationActionFilter();
             services.ConfigureValidateEntityExistsFilter();

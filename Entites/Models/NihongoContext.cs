@@ -18,8 +18,8 @@ namespace Nihongo.Entites.Models
         }
 
         public virtual DbSet<Kanji> Kanjis { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

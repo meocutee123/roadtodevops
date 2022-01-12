@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Entites.Models
 {
-    public class User
+    public enum Role
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        Admin,
+        User
     }
 }

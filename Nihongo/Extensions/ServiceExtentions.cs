@@ -9,9 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 using Nihongo.Api.Filters;
 using Nihongo.Application.Common.Mappings;
 using Nihongo.Application.Common.Settings;
+using Nihongo.Application.Helpers;
 using Nihongo.Application.Interfaces.Reposiroty;
+using Nihongo.Application.Interfaces.Services;
 using Nihongo.Entites.Models;
 using Nihongo.Repository;
+using Nihongo.Repository.Services;
 using System.Text;
 
 namespace Nihongo.Api.Extensions
@@ -28,13 +31,14 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 RequireExpirationTime = false,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:key"]))
             };
@@ -66,6 +70,11 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+        }
+        public static void ConfigureAppServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {

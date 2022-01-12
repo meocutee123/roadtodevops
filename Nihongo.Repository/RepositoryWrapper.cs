@@ -14,8 +14,9 @@ namespace Nihongo.Repository
     {
         private readonly NihongoContext _dbContext;
         private IKanjiRepository _kanji;
-        private IUserRepository _user;
+        //private IUserRepository _user;
         private IRefreshTokenRepository _refreshToken;
+        private IAccountRepository _accountRepository;
 
         public RepositoryWrapper(NihongoContext nihongoContext)
         {
@@ -33,16 +34,16 @@ namespace Nihongo.Repository
             }
         }
 
-        public IUserRepository User {
-            get
-            {
-                if (_user == null)
-                {
-                    _user = new UserRepository(_dbContext);
-                }
-                return _user;
-            }
-        }
+        //public IUserRepository User {
+        //    get
+        //    {
+        //        if (_user == null)
+        //        {
+        //            _user = new UserRepository(_dbContext);
+        //        }
+        //        return _user;
+        //    }
+        //}
 
         public IRefreshTokenRepository RefreshToken
         {
@@ -53,6 +54,18 @@ namespace Nihongo.Repository
                     _refreshToken = new RefreshTokenRepository(_dbContext);
                 }
                 return _refreshToken;
+            }
+        }
+
+        public IAccountRepository Account
+        {
+            get
+            {
+                if (_accountRepository == null)
+                {
+                    _accountRepository = new AccountRepository(_dbContext);
+                }
+                return _accountRepository;
             }
         }
 
