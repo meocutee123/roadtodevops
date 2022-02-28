@@ -4,3 +4,6 @@ Database first:
 	+ Microsoft.EntityFrameworkCore.Tools
 
 Scaffold-DbContext "Server=NTUANNGHIA\SQLEXPRESS;Database=Nihongo;Trusted_Connection=true;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+add-migration
+database-update
+remove-migration

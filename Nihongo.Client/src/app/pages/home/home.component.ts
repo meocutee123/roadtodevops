@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { KanjiService } from 'src/app/services/apis/country/kanji.service';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +9,7 @@ export class HomeComponent implements OnInit {
 
   isActive: boolean = false
 
-  constructor(private _kanjiService: KanjiService) { }
+  constructor() { }
 
   ngOnInit(): void {
 
@@ -78,9 +77,5 @@ export class HomeComponent implements OnInit {
     return JSON.parse(localStorage.getItem("jwt")!)
   }
   getKanjiAsync() {
-    this._kanjiService.getKanji().subscribe({
-      next: (response) => console.log(response),
-      error: (err) => console.log(err)
-    })
   }
 }

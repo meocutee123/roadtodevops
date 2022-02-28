@@ -26,7 +26,7 @@ namespace Nihongo.Repository.Repository
         public async Task DeleteAsync(int id)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id);
-            if(entity == null)
+            if (entity == null)
             {
                 throw new Exception("Something went wrong, please try again");
             }
@@ -38,7 +38,7 @@ namespace Nihongo.Repository.Repository
             return await _dbContext.Set<T>().Where(expression).FirstOrDefaultAsync();
         }
 
-        public IQueryable<T> GetAllAsync()
+        public IQueryable<T> GetAll()
         {
             return _dbContext.Set<T>().AsNoTracking();
         }
@@ -46,7 +46,7 @@ namespace Nihongo.Repository.Repository
         public async Task<IList<T>> GetByConditionAsync(Expression<Func<T, bool>> expression)
         {
             return await _dbContext.Set<T>().Where(expression).ToListAsync();
-            
+
         }
 
         public async Task UpdateAsync(T entity)

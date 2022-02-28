@@ -9,6 +9,8 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
             app.UseCors("enableCORS");
         }
     }

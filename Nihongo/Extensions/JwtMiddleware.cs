@@ -27,12 +27,12 @@ namespace Nihongo.Api.Extensions
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                await attachAccountToContext(context, dataContext, token);
+                await AttachAccountToContext(context, dataContext, token);
 
             await _next(context);
         }
 
-        private async Task attachAccountToContext(HttpContext context, NihongoContext dataContext, string token)
+        private async Task AttachAccountToContext(HttpContext context, NihongoContext dataContext, string token)
         {
             try
             {

@@ -1,6 +1,5 @@
 
 <div class="home-wrapper">
-  <app-desktop-icon (notifyParent)="getNotification($event)"></app-desktop-icon>
   <div *ngIf="isActive" class="window border" id="mydiv">
     <div class="toolbar dragable">
       <div class="name">My computer 🧭 🍈 🍇</div>
@@ -10,7 +9,7 @@
       </div>
     </div>
     <div class="body">
-      {{ getCredentials() | json }}
+      {{ getCredentials() }}
       <button (click)="getKanjiAsync()">Get Kanji</button>
     </div>
   </div>

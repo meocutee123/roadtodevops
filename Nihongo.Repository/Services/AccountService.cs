@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nihongo.Application.Common;
 using Nihongo.Application.Common.Requests;
 using Nihongo.Application.Common.Responses;
 using Nihongo.Application.Helpers;
+using Nihongo.Application.Helpers.Exceptions;
 using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Application.Interfaces.Services;
 using Nihongo.Entites.Models;
@@ -39,10 +41,10 @@ namespace Nihongo.Repository.Services
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var account = await _repository.Account.FindAsync(x => x.Email == model.Email);
+            var account = await _repository.Account.FindAsync(x => x.Email == model.Username);
 
             if (account == null /*|| !account.IsVerified*/ || !BC.Verify(model.Password, account.PasswordHash))
-                throw new AppException("Email or password is incorrect");
+                throw new UnauthorizedAccessException("The logon attempt failed");
 
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = GenerateJwtToken(account);
@@ -61,7 +63,7 @@ namespace Nihongo.Repository.Services
             response.RefreshToken = refreshToken.Token;
             return response;
         }
-        public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
+        public async Task<AuthenticateResponse> RefreshToken(string token, string ipAddress)
         {
             var (refreshToken, account) = await GetRefreshToken(token);
 
@@ -96,7 +98,7 @@ namespace Nihongo.Repository.Services
             account.ResetToken = RandomTokenString(35);
             account.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
 
-            await  _repository.Account.UpdateAsync(account);
+            await _repository.Account.UpdateAsync(account);
             await _repository.SaveChangesAsync();
 
             // send email
@@ -108,17 +110,18 @@ namespace Nihongo.Repository.Services
             // validate
             if (isExist != null)
             {
+                throw new AppException($"The email {model.Email} already exists");
                 // send already registered error in email to prevent account enumeration
-                SendAlreadyRegisteredEmail(model.Email, origin);
-                return;
+                //SendAlreadyRegisteredEmail(model.Email, origin);
+                //return;
             }
 
             // map model to new account object
             var account = _mapper.Map<Account>(model);
 
             // first registered account is an admin
-            var isFirstAccount = await _repository.Account.GetAllAsync().CountAsync() == 0;
-            account.Role = isFirstAccount ? Role.Admin : Role.User;
+            var isFirstAccount = await _repository.Account.GetAll().AnyAsync();
+            account.Role = !isFirstAccount ? Role.Admin: Role.Employee;
             account.Created = DateTime.UtcNow;
             account.VerificationToken = RandomTokenString(35);
 
@@ -130,7 +133,7 @@ namespace Nihongo.Repository.Services
             await _repository.SaveChangesAsync();
 
             // send email
-            SendVerificationEmail(account, origin);
+            //SendVerificationEmail(account, origin);
         }
         public async Task VerifyEmail(string token)
         {
@@ -161,7 +164,7 @@ namespace Nihongo.Repository.Services
                 x.ResetTokenExpires > DateTime.UtcNow);
 
             if (account == null)
-                throw new AppException("Invalid token");
+                throw new UnauthorizedAccessException("Invalid token");
 
             // update password and remove reset token
             account.PasswordHash = BC.HashPassword(model.Password);
@@ -179,7 +182,7 @@ namespace Nihongo.Repository.Services
                 x.ResetTokenExpires > DateTime.UtcNow);
 
             if (account == null)
-                throw new AppException("Invalid token");
+                throw new UnauthorizedAccessException("Invalid token");
         }
         private string GenerateJwtToken(Account account)
         {
@@ -188,13 +191,13 @@ namespace Nihongo.Repository.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-        private RefreshToken GenerateRefreshToken(string ipAddress)
+        private static RefreshToken GenerateRefreshToken(string ipAddress)
         {
             return new RefreshToken
             {
@@ -214,7 +217,7 @@ namespace Nihongo.Repository.Services
         }
         private void RemoveOldRefreshTokens(Account account)
         {
-            account.RefreshTokens.RemoveAll(x =>
+            account.RefreshTokens.ToList().RemoveAll(x =>
                 !x.IsActive &&
                 x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
         }
@@ -282,10 +285,18 @@ namespace Nihongo.Repository.Services
         private async Task<(RefreshToken, Account)> GetRefreshToken(string token)
         {
             var account = await _repository.Account.FindAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-            if (account == null) throw new AppException("Invalid token");
+            if (account == null) throw new UnauthorizedAccessException ("Invalid token");
+
             var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
-            if (!refreshToken.IsActive) throw new AppException("Invalid token");
+
+            if (!refreshToken.IsActive) throw new UnauthorizedAccessException ("Invalid token");
+
             return (refreshToken, account);
+        }
+
+        public async Task<List<Account>> GetAll()
+        {
+            return await _repository.Account.GetAll().ToListAsync();
         }
     }
 }

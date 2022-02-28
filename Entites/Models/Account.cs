@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Nihongo.Entites.Nihongo;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+
+#nullable disable
 
 namespace Nihongo.Entites.Models
 {
-    public class Account
+    public class Account : IEntity
     {
-
         public int Id { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }
@@ -31,6 +33,5 @@ namespace Nihongo.Entites.Models
         {
             return this.RefreshTokens?.Find(x => x.Token == token) != null;
         }
-
     }
 }

@@ -15,7 +15,6 @@ namespace Nihongo.Entites.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -74,36 +73,6 @@ namespace Nihongo.Entites.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("Nihongo.Entites.Models.Kanji", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("English")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Japanese")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("KanaSpelling")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Romanization")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Kanji");
-                });
-
             modelBuilder.Entity("Nihongo.Entites.Models.Account", b =>
                 {
                     b.OwnsMany("Nihongo.Entites.Models.RefreshToken", "RefreshTokens", b1 =>
@@ -125,6 +94,9 @@ namespace Nihongo.Entites.Migrations
                             b1.Property<DateTime>("Expires")
                                 .HasColumnType("datetime2");
 
+                            b1.Property<string>("ReasonRevoked")
+                                .HasColumnType("nvarchar(max)");
+
                             b1.Property<string>("ReplacedByToken")
                                 .HasColumnType("nvarchar(max)");
 
@@ -141,12 +113,10 @@ namespace Nihongo.Entites.Migrations
 
                             b1.HasIndex("AccountId");
 
-                            b1.ToTable("RefreshTokens");
+                            b1.ToTable("RefreshToken");
 
-                            b1.WithOwner("Account")
+                            b1.WithOwner()
                                 .HasForeignKey("AccountId");
-
-                            b1.Navigation("Account");
                         });
 
                     b.Navigation("RefreshTokens");

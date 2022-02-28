@@ -9,6 +9,7 @@ namespace Nihongo.Application.Helpers
 {
     public class AppException : Exception
     {
+        public int HttpStatus { get; set; }
         public AppException() : base() { }
 
         public AppException(string message) : base(message) { }

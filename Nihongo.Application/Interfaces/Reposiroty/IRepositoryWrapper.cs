@@ -8,9 +8,6 @@ namespace Nihongo.Application.Interfaces.Reposiroty
 {
     public interface IRepositoryWrapper
     {
-        IKanjiRepository Kanji { get; }
-        //IUserRepository User { get; }
-        IRefreshTokenRepository RefreshToken { get; }
         IAccountRepository Account { get; }
         Task SaveChangesAsync();
     }

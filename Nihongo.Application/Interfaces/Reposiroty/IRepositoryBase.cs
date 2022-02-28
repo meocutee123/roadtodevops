@@ -9,7 +9,7 @@ namespace Nihongo.Application.Interfaces.Reposiroty
 {
     public interface IRepositoryBase<T>
     {
-        IQueryable<T> GetAllAsync();
+        IQueryable<T> GetAll();
         Task<IList<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);

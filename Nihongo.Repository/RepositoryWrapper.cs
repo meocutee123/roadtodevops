@@ -13,48 +13,12 @@ namespace Nihongo.Repository
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private readonly NihongoContext _dbContext;
-        private IKanjiRepository _kanji;
-        //private IUserRepository _user;
         private IRefreshTokenRepository _refreshToken;
         private IAccountRepository _accountRepository;
 
         public RepositoryWrapper(NihongoContext nihongoContext)
         {
             _dbContext = nihongoContext;
-        }
-        public IKanjiRepository Kanji
-        {
-            get
-            {
-                if (_kanji == null)
-                {
-                    _kanji = new KanjiRepository(_dbContext);
-                }
-                return _kanji;
-            }
-        }
-
-        //public IUserRepository User {
-        //    get
-        //    {
-        //        if (_user == null)
-        //        {
-        //            _user = new UserRepository(_dbContext);
-        //        }
-        //        return _user;
-        //    }
-        //}
-
-        public IRefreshTokenRepository RefreshToken
-        {
-            get
-            {
-                if (_refreshToken == null)
-                {
-                    _refreshToken = new RefreshTokenRepository(_dbContext);
-                }
-                return _refreshToken;
-            }
         }
 
         public IAccountRepository Account

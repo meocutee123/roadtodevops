@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using Nihongo.Api.Extensions;
 using Nihongo.Api.Filters;
 using Nihongo.Application.Interfaces;
@@ -40,7 +41,10 @@ namespace Nihongo.Api
             services.ConfigureValidationActionFilter();
             services.ConfigureValidateEntityExistsFilter();
             services.ConfigureCors();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RoadToDevops", Version = "v1" });

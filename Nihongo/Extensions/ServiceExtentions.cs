@@ -61,9 +61,10 @@ namespace Nihongo.Api.Extensions
             {
                 options.AddPolicy("enableCORS", builder =>
                 {
-                    builder.AllowAnyOrigin();
+                    builder.WithOrigins("http://localhost:4200");
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
+                    builder.AllowCredentials();
                 });
             });
         }
@@ -89,7 +90,7 @@ namespace Nihongo.Api.Extensions
         }
         public static void ConfigureValidateEntityExistsFilter(this IServiceCollection services)
         {
-            services.AddScoped<ValidateEntityExistsAttribute<Kanji>>();
+            services.AddScoped<ValidateEntityExistsAttribute<Account>>();
         }
     }
 }

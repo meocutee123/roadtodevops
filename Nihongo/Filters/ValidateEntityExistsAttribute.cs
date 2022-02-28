@@ -24,7 +24,7 @@ namespace Nihongo.Api.Filters
                 var entity = await _context.Set<T>().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
                 if (entity == null)
                 {
-                    context.Result = new NotFoundResult();
+                    context.Result = new NotFoundObjectResult($"Entity with id ${id} does not exist");
                 }
                 else
                 {

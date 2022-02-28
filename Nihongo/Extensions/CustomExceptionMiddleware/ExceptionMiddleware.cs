@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nihongo.Api.Models;
+using Nihongo.Application.Helpers;
+using Nihongo.Application.Helpers.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -26,13 +30,22 @@ namespace Nihongo.Api.Extensions.CustomExceptionMiddleware
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
+            var response = context.Response;
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            response.StatusCode = ex switch
+            {
+                KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                ForbiddenAccessException => (int)HttpStatusCode.Forbidden,
+                AppException => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError,// unhandled error
+            };
+
             return context.Response.WriteAsync(new ErrorDetails
             {
-                StatusCode = context.Response.StatusCode,
                 Message = ex.Message,
             }.ToString());
         }

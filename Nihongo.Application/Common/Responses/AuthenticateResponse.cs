@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nihongo.Entites.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +10,22 @@ namespace Nihongo.Application.Common.Responses
 {
     public class AuthenticateResponse
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Role { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime? Updated { get; set; }
-        public bool IsVerified { get; set; }
+        public Role Role { get; set; }
         public string JwtToken { get; set; }
 
         [JsonIgnore] // refresh token is returned in http only cookie
         public string RefreshToken { get; set; }
+
+        //public AuthenticateResponse(Account user, string token)
+        //{
+        //    Id = user.Id;
+        //    FirstName = user.FirstName;
+        //    LastName = user.LastName;
+        //    Role = user.Role;
+        //    JwtToken = token;
+        //}
     }
 }
