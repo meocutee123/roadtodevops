@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nihongo.Api.Extensions.CustomExceptionMiddleware;
 using Nihongo.Entites.Models;
+using Nihongo.Shared.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,7 +3,7 @@ using Nihongo.Application.Common.Requests;
 using Nihongo.Application.Common.Responses;
 using Nihongo.Entites.Models;
 
-namespace Nihongo.Application.Common.Mappings
+namespace Nihongo.Api.Mappings
 {
     public class MappingProfile : Profile
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
-using Nihongo.Api.Extensions.CustomExceptionMiddleware;
+using Nihongo.Shared.Exceptions;
 
 namespace Nihongo.Api.Extensions
 {

@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Nihongo.Api.Models;
+﻿
+using Microsoft.AspNetCore.Http;
 using Nihongo.Application.Helpers;
-using Nihongo.Application.Helpers.Exceptions;
+using Nihongo.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Nihongo.Api.Extensions.CustomExceptionMiddleware
+namespace Nihongo.Shared.Exceptions
 {
     public class ExceptionMiddleware
     {

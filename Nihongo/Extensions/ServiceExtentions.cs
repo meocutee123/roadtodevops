@@ -7,15 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Nihongo.Api.Filters;
-using Nihongo.Application.Common.Mappings;
-using Nihongo.Application.Common.Settings;
-using Nihongo.Application.Helpers;
 using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Application.Interfaces.Services;
 using Nihongo.Entites.Models;
 using Nihongo.Repository;
 using Nihongo.Repository.Services;
 using System.Text;
+using Nihongo.Api.Settings;
+using Nihongo.Api.Mappings;
 
 namespace Nihongo.Api.Extensions
 {

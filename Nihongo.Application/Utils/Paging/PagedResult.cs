@@ -1,15 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Nihongo.Application.Common
+namespace Nihongo.Shared.Utils.Paging
 {
-    public class ApiResult<T>
+    public class PagedResult<T>
     {
-        public T Data { get; set; }
+        public IList<T> Data { get; set; }
+        public int TotalRecord { get; set; }
         public int Code { get; set; }
         public string Message { get; set; }
         public override string ToString()

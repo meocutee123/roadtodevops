@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 
-namespace Nihongo.Api.Models
+namespace Nihongo.Shared.Models
 {
     public class ErrorDetails
     {

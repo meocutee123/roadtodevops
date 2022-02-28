@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Entites\Nihongo.Entites.csproj" />
-    <ProjectReference Include="..\Nihongo.Application\Nihongo.Application.csproj" />
+    <ProjectReference Include="..\Nihongo.Application\Nihongo.Shared.csproj" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
     <PackageReference Include="MailKit" Version="2.8.0" />
   </ItemGroup>

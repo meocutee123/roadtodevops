@@ -3,7 +3,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using Nihongo.Application.Helpers;
+using Nihongo.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

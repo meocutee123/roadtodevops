@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nihongo.Api.Extensions.CustomExceptionMiddleware
+namespace Nihongo.Shared.Exceptions
 {
     public class ForbiddenAccessException : Exception
     {

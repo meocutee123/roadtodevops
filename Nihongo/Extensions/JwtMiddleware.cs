@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Nihongo.Application.Common.Settings;
+using Nihongo.Api.Settings;
 using Nihongo.Entites.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;

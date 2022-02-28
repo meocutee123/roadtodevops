@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Nihongo.Application.Common
+namespace Nihongo.Shared.Utils.Paging
 {
     public class PagingRequestBase
     {
@@ -12,7 +12,7 @@ namespace Nihongo.Application.Common
             get { return _pageSize; }
             set
             {
-                _pageSize = (value > MAX_PAGE_SIZE) ? MAX_PAGE_SIZE : value;
+                _pageSize = value > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : value;
             }
         }
     }
