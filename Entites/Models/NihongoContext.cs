@@ -18,6 +18,11 @@ namespace Nihongo.Entites.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Landlord> Landlords { get; set; }
+        public virtual DbSet<Building> Buildings { get; set; }
+        public virtual DbSet<Property> Properties { get; set; }
+        public virtual DbSet<Amenity> Amenities { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,6 +30,10 @@ namespace Nihongo.Entites.Models
             {
                 optionsBuilder.UseSqlServer("Server=NTUANNGHIA\\SQLEXPRESS;Database=Nihongo;Trusted_Connection=true;");
             }
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
         }
     }
 }

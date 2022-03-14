@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Api.Settings
 {
-    public class JWTSettings
+    public class ApiJWTSettings
     {
         public string Key { get; set; }
         public string Issuer { get; set; }

@@ -14,7 +14,7 @@ namespace Nihongo.Api.Filters
 
         public ValidateEntityExistsAttribute(NihongoContext context)
         {
-            this._context = context;
+            _context = context;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

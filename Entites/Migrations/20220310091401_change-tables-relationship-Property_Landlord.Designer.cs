@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220310091401_change-tables-relationship-Property_Landlord")]
+    partial class changetablesrelationshipProperty_Landlord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,10 +329,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("LandlordId")
@@ -395,10 +394,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("PropertyId")

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nihongo.Shared.Interfaces.Reposiroty;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Nihongo.Application.Interfaces.Reposiroty
     public interface IRepositoryWrapper
     {
         IAccountRepository Account { get; }
+        IPropertyRepository Property { get; }
         Task SaveChangesAsync();
     }
 }

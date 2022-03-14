@@ -13,8 +13,10 @@ using Nihongo.Entites.Models;
 using Nihongo.Repository;
 using Nihongo.Repository.Services;
 using System.Text;
-using Nihongo.Api.Settings;
 using Nihongo.Api.Mappings;
+using Nihongo.Shared.Settings;
+using Nihongo.Api.Settings;
+using Nihongo.Shared.Interfaces.Services;
 
 namespace Nihongo.Api.Extensions
 {
@@ -29,8 +31,8 @@ namespace Nihongo.Api.Extensions
         }
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
-            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.Configure<ApiJWTSettings>(configuration.GetSection("JWTSettings"));
+            services.Configure<SharedAppSettings>(configuration.GetSection("AppSettings"));
 
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -74,7 +76,12 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureAppServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPropertyService, PropertyService>();
+
+
+
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IJwtService, JwtService>();
         }
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
@@ -90,6 +97,7 @@ namespace Nihongo.Api.Extensions
         public static void ConfigureValidateEntityExistsFilter(this IServiceCollection services)
         {
             services.AddScoped<ValidateEntityExistsAttribute<Account>>();
+            services.AddScoped<ValidateEntityExistsAttribute<Property>>();
         }
     }
 }

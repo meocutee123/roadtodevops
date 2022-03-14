@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nihongo.Api.Settings
+namespace Nihongo.Shared.Settings
 {
-    public class AppSettings
+    public class SharedAppSettings
     {
         public string Secret { get; set; }
 

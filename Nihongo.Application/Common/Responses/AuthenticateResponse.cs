@@ -1,4 +1,4 @@
-﻿using Nihongo.Entites.Models;
+﻿using Nihongo.Entites.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

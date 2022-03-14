@@ -1,4 +1,5 @@
-﻿using Nihongo.Entites.Nihongo;
+﻿using Nihongo.Entites.Enums;
+using Nihongo.Entites.Nihongo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

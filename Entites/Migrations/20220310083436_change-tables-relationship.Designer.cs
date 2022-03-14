@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220310083436_change-tables-relationship")]
+    partial class changetablesrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,6 +133,9 @@ namespace Nihongo.Entites.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("LandlordId")
+                        .HasColumnType("int");
+
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
@@ -144,6 +149,8 @@ namespace Nihongo.Entites.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LandlordId");
 
                     b.ToTable("Buildings");
                 });
@@ -221,9 +228,6 @@ namespace Nihongo.Entites.Migrations
                     b.Property<string>("HighLight")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LandlordId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RoomCount")
                         .HasColumnType("int");
 
@@ -233,8 +237,6 @@ namespace Nihongo.Entites.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BuildingId");
-
-                    b.HasIndex("LandlordId");
 
                     b.ToTable("Properties");
                 });
@@ -318,6 +320,15 @@ namespace Nihongo.Entites.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Nihongo.Entites.Models.Building", b =>
+                {
+                    b.HasOne("Nihongo.Entites.Models.Landlord", "Landlord")
+                        .WithMany("Buildings")
+                        .HasForeignKey("LandlordId");
+
+                    b.Navigation("Landlord");
+                });
+
             modelBuilder.Entity("Nihongo.Entites.Models.Landlord", b =>
                 {
                     b.OwnsMany("Nihongo.Entites.Models.LandlordOtherDetail", "LandlordOtherDetail", b1 =>
@@ -327,10 +338,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("LandlordId")
@@ -357,10 +365,6 @@ namespace Nihongo.Entites.Migrations
                     b.HasOne("Nihongo.Entites.Models.Building", "Building")
                         .WithMany("Properties")
                         .HasForeignKey("BuildingId");
-
-                    b.HasOne("Nihongo.Entites.Models.Landlord", "Landlord")
-                        .WithMany("Properties")
-                        .HasForeignKey("LandlordId");
 
                     b.OwnsMany("Nihongo.Entites.Models.OtherFeature", "OtherFeatures", b1 =>
                         {
@@ -395,10 +399,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("PropertyId")
@@ -421,8 +422,6 @@ namespace Nihongo.Entites.Migrations
 
                     b.Navigation("Building");
 
-                    b.Navigation("Landlord");
-
                     b.Navigation("OtherFeatures");
                 });
 
@@ -433,7 +432,7 @@ namespace Nihongo.Entites.Migrations
 
             modelBuilder.Entity("Nihongo.Entites.Models.Landlord", b =>
                 {
-                    b.Navigation("Properties");
+                    b.Navigation("Buildings");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,6 +6,7 @@ using Nihongo.Api.Extensions.Authorization;
 using Nihongo.Api.Filters;
 using Nihongo.Application.Common.Responses;
 using Nihongo.Application.Interfaces.Reposiroty;
+using Nihongo.Entites.Enums;
 using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
@@ -25,8 +26,8 @@ namespace Nihongo.Api.Controllers
 
         public UserController(IRepositoryWrapper repository, IMapper mapper)
         {
-            this._repository = repository;
-            this._mapper = mapper;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [Authorize(Role.Admin)]

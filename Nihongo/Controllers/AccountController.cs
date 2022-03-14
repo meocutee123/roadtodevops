@@ -6,6 +6,7 @@ using Nihongo.Api.Filters;
 using Nihongo.Application.Common.Requests;
 using Nihongo.Application.Common.Responses;
 using Nihongo.Application.Interfaces.Services;
+using Nihongo.Entites.Enums;
 using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;

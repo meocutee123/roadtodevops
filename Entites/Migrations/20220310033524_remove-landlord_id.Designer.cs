@@ -3,51 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220310033524_remove-landlord_id")]
+    partial class removelandlord_id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AmenityProperty", b =>
-                {
-                    b.Property<int>("AmenitiesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AmenitiesId", "PropertiesId");
-
-                    b.HasIndex("PropertiesId");
-
-                    b.ToTable("AmenityProperty");
-                });
-
-            modelBuilder.Entity("ImageProperty", b =>
-                {
-                    b.Property<int>("ImagesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImagesId", "PropertiesId");
-
-                    b.HasIndex("PropertiesId");
-
-                    b.ToTable("ImageProperty");
-                });
 
             modelBuilder.Entity("Nihongo.Entites.Models.Account", b =>
                 {
@@ -131,6 +103,9 @@ namespace Nihongo.Entites.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("LandlordId")
+                        .HasColumnType("int");
+
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
@@ -144,6 +119,8 @@ namespace Nihongo.Entites.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LandlordId");
 
                     b.ToTable("Buildings");
                 });
@@ -221,52 +198,47 @@ namespace Nihongo.Entites.Migrations
                     b.Property<string>("HighLight")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LandlordId")
+                    b.Property<int>("PropertyType")
                         .HasColumnType("int");
 
                     b.Property<int>("RoomCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BuildingId");
 
-                    b.HasIndex("LandlordId");
-
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("AmenityProperty", b =>
+            modelBuilder.Entity("Nihongo.Entites.Models.PropertyAmenity", b =>
                 {
-                    b.HasOne("Nihongo.Entites.Models.Amenity", null)
-                        .WithMany()
-                        .HasForeignKey("AmenitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
 
-                    b.HasOne("Nihongo.Entites.Models.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("AmenityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PropertyId", "AmenityId");
+
+                    b.HasIndex("AmenityId");
+
+                    b.ToTable("PropertyAmenities");
                 });
 
-            modelBuilder.Entity("ImageProperty", b =>
+            modelBuilder.Entity("Nihongo.Entites.Models.PropertyImage", b =>
                 {
-                    b.HasOne("Nihongo.Entites.Models.Image", null)
-                        .WithMany()
-                        .HasForeignKey("ImagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
 
-                    b.HasOne("Nihongo.Entites.Models.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PropertyId", "ImageId");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("PropertyImages");
                 });
 
             modelBuilder.Entity("Nihongo.Entites.Models.Account", b =>
@@ -318,6 +290,15 @@ namespace Nihongo.Entites.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Nihongo.Entites.Models.Building", b =>
+                {
+                    b.HasOne("Nihongo.Entites.Models.Landlord", "Landlord")
+                        .WithMany("Buildings")
+                        .HasForeignKey("LandlordId");
+
+                    b.Navigation("Landlord");
+                });
+
             modelBuilder.Entity("Nihongo.Entites.Models.Landlord", b =>
                 {
                     b.OwnsMany("Nihongo.Entites.Models.LandlordOtherDetail", "LandlordOtherDetail", b1 =>
@@ -327,10 +308,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("LandlordId")
@@ -357,10 +335,6 @@ namespace Nihongo.Entites.Migrations
                     b.HasOne("Nihongo.Entites.Models.Building", "Building")
                         .WithMany("Properties")
                         .HasForeignKey("BuildingId");
-
-                    b.HasOne("Nihongo.Entites.Models.Landlord", "Landlord")
-                        .WithMany("Properties")
-                        .HasForeignKey("LandlordId");
 
                     b.OwnsMany("Nihongo.Entites.Models.OtherFeature", "OtherFeatures", b1 =>
                         {
@@ -395,10 +369,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
+                            b1.Property<string>("Key")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<int>("PropertyId")
@@ -421,9 +392,50 @@ namespace Nihongo.Entites.Migrations
 
                     b.Navigation("Building");
 
-                    b.Navigation("Landlord");
-
                     b.Navigation("OtherFeatures");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.PropertyAmenity", b =>
+                {
+                    b.HasOne("Nihongo.Entites.Models.Amenity", "Amenity")
+                        .WithMany("Properties")
+                        .HasForeignKey("AmenityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Nihongo.Entites.Models.Property", "Property")
+                        .WithMany("Amenities")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Amenity");
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.PropertyImage", b =>
+                {
+                    b.HasOne("Nihongo.Entites.Models.Image", "Image")
+                        .WithMany("Properties")
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Nihongo.Entites.Models.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.Amenity", b =>
+                {
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("Nihongo.Entites.Models.Building", b =>
@@ -431,9 +443,21 @@ namespace Nihongo.Entites.Migrations
                     b.Navigation("Properties");
                 });
 
-            modelBuilder.Entity("Nihongo.Entites.Models.Landlord", b =>
+            modelBuilder.Entity("Nihongo.Entites.Models.Image", b =>
                 {
                     b.Navigation("Properties");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.Landlord", b =>
+                {
+                    b.Navigation("Buildings");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.Property", b =>
+                {
+                    b.Navigation("Amenities");
+
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

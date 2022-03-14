@@ -8,7 +8,9 @@ using Nihongo.Application.Common.Responses;
 using Nihongo.Application.Helpers;
 using Nihongo.Application.Interfaces.Reposiroty;
 using Nihongo.Application.Interfaces.Services;
+using Nihongo.Entites.Enums;
 using Nihongo.Entites.Models;
+using Nihongo.Shared.Interfaces.Services;
 using Nihongo.Shared.Settings;
 using System;
 using System.Collections.Generic;
@@ -25,18 +27,18 @@ namespace Nihongo.Repository.Services
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
-        private readonly AppSettings _appSettings;
         private readonly IEmailService _emailService;
+        private readonly IJwtService _jwtService;
 
         public AccountService(IRepositoryWrapper repository,
-             IOptions<AppSettings> appSettings,
+             IJwtService jwtService,
              IMapper mapper,
              IEmailService emailService)
         {
             _repository = repository;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
             _emailService = emailService;
+            _jwtService = jwtService;
         }
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
@@ -47,12 +49,12 @@ namespace Nihongo.Repository.Services
                 throw new UnauthorizedAccessException("The logon attempt failed");
 
             // authentication successful so generate jwt and refresh tokens
-            var jwtToken = GenerateJwtToken(account);
-            var refreshToken = GenerateRefreshToken(ipAddress);
+            var jwtToken = _jwtService.GenerateJwtToken(account);
+            var refreshToken = _jwtService.GenerateRefreshToken(ipAddress);
             account.RefreshTokens.Add(refreshToken);
 
             // remove old refresh tokens from account
-            RemoveOldRefreshTokens(account);
+            _jwtService.RemoveOldRefreshTokens(account);
 
             // save changes to db
             await _repository.Account.UpdateAsync(account);
@@ -65,22 +67,22 @@ namespace Nihongo.Repository.Services
         }
         public async Task<AuthenticateResponse> RefreshToken(string token, string ipAddress)
         {
-            var (refreshToken, account) = await GetRefreshToken(token);
+            var (refreshToken, account) = await _jwtService.GetRefreshToken(token);
 
             // replace old refresh token with a new one and save
-            var newRefreshToken = GenerateRefreshToken(ipAddress);
+            var newRefreshToken = _jwtService.GenerateRefreshToken(ipAddress);
             refreshToken.Revoked = DateTime.UtcNow;
             refreshToken.RevokedByIp = ipAddress;
             refreshToken.ReplacedByToken = newRefreshToken.Token;
             account.RefreshTokens.Add(newRefreshToken);
 
-            RemoveOldRefreshTokens(account);
+            _jwtService.RemoveOldRefreshTokens(account);
 
             await _repository.Account.UpdateAsync(account);
             await _repository.SaveChangesAsync();
 
             // generate new jwt
-            var jwtToken = GenerateJwtToken(account);
+            var jwtToken = _jwtService.GenerateJwtToken(account);
 
             var response = _mapper.Map<AuthenticateResponse>(account);
             response.JwtToken = jwtToken;
@@ -95,14 +97,14 @@ namespace Nihongo.Repository.Services
             if (account == null) return;
 
             // create reset token that expires after 1 day
-            account.ResetToken = RandomTokenString(35);
+            account.ResetToken = _jwtService.RandomTokenString(35);
             account.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
 
             await _repository.Account.UpdateAsync(account);
             await _repository.SaveChangesAsync();
 
             // send email
-            SendPasswordResetEmail(account, origin);
+            //SendPasswordResetEmail(account, origin);
         }
         public async Task Register(RegisterRequest model, string origin)
         {
@@ -123,7 +125,7 @@ namespace Nihongo.Repository.Services
             var isFirstAccount = await _repository.Account.GetAll().AnyAsync();
             account.Role = !isFirstAccount ? Role.Admin: Role.Employee;
             account.Created = DateTime.UtcNow;
-            account.VerificationToken = RandomTokenString(35);
+            account.VerificationToken = _jwtService.RandomTokenString(35);
 
             // hash password
             account.PasswordHash = BC.HashPassword(model.Password);
@@ -149,7 +151,7 @@ namespace Nihongo.Repository.Services
         }
         public async Task RevokeToken(string token, string ipAddress)
         {
-            var (refreshToken, account) = await GetRefreshToken(token);
+            var (refreshToken, account) = await _jwtService.GetRefreshToken(token);
 
             // revoke token and save
             refreshToken.Revoked = DateTime.UtcNow;
@@ -184,119 +186,10 @@ namespace Nihongo.Repository.Services
             if (account == null)
                 throw new UnauthorizedAccessException("Invalid token");
         }
-        private string GenerateJwtToken(Account account)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(10),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-        private static RefreshToken GenerateRefreshToken(string ipAddress)
-        {
-            return new RefreshToken
-            {
-                Token = RandomTokenString(35) + Guid.NewGuid(),
-                Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow,
-                CreatedByIp = ipAddress
-            };
-        }
-        private static string RandomTokenString(int length)
-        {
-            var random = new Random();
-            var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(characters, length)
-                .Select(x => x[random.Next(x.Length)])
-                .ToArray()) + Guid.NewGuid();
-        }
-        private void RemoveOldRefreshTokens(Account account)
-        {
-            account.RefreshTokens.ToList().RemoveAll(x =>
-                !x.IsActive &&
-                x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
-        }
-        private void SendVerificationEmail(Account account, string origin)
-        {
-            string message;
-            if (!string.IsNullOrEmpty(origin))
-            {
-                var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
-                message = $@"<p>Please click the below link to verify your email address:</p>
-                             <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
-            }
-            else
-            {
-                message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
-                             <p><code>{account.VerificationToken}</code></p>";
-            }
-
-            _emailService.Send(
-                to: account.Email,
-                subject: "Sign-up Verification API - Verify Email",
-                html: $@"<h4>Verify Email</h4>
-                         <p>Thanks for registering!</p>
-                         {message}"
-            );
-        }
-        private void SendAlreadyRegisteredEmail(string email, string origin)
-        {
-            string message;
-            if (!string.IsNullOrEmpty(origin))
-                message = $@"<p>If you don't know your password please visit the <a href=""{origin}/account/forgot-password"">forgot password</a> page.</p>";
-            else
-                message = "<p>If you don't know your password you can reset it via the <code>/accounts/forgot-password</code> api route.</p>";
-
-            _emailService.Send(
-                to: email,
-                subject: "Sign-up Verification API - Email Already Registered",
-                html: $@"<h4>Email Already Registered</h4>
-                         <p>Your email <strong>{email}</strong> is already registered.</p>
-                         {message}"
-            );
-        }
-        private void SendPasswordResetEmail(Account account, string origin)
-        {
-            string message;
-            if (!string.IsNullOrEmpty(origin))
-            {
-                var resetUrl = $"{origin}/account/reset-password?token={account.ResetToken}";
-                message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
-                             <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
-            }
-            else
-            {
-                message = $@"<p>Please use the below token to reset your password with the <code>/accounts/reset-password</code> api route:</p>
-                             <p><code>{account.ResetToken}</code></p>";
-            }
-
-            _emailService.Send(
-                to: account.Email,
-                subject: "Sign-up Verification API - Reset Password",
-                html: $@"<h4>Reset Password Email</h4>
-                         {message}"
-            );
-        }
-        private async Task<(RefreshToken, Account)> GetRefreshToken(string token)
-        {
-            var account = await _repository.Account.FindAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-            if (account == null) throw new UnauthorizedAccessException ("Invalid token");
-
-            var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
-
-            if (!refreshToken.IsActive) throw new UnauthorizedAccessException ("Invalid token");
-
-            return (refreshToken, account);
-        }
-
         public async Task<List<Account>> GetAll()
         {
             return await _repository.Account.GetAll().ToListAsync();
         }
     }
+
 }

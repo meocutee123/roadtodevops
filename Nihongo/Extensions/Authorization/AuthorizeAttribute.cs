@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nihongo.Entites.Enums;
 using Nihongo.Entites.Models;
 using Nihongo.Shared.Exceptions;
 using System;

@@ -14,9 +14,9 @@ namespace Nihongo.Api.Extensions
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly JWTSettings _appSettings;
+        private readonly ApiJWTSettings _appSettings;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<JWTSettings> appSettings)
+        public JwtMiddleware(RequestDelegate next, IOptions<ApiJWTSettings> appSettings)
         {
             _next = next;
             _appSettings = appSettings.Value;

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Nihongo.Api.Extensions;
 using Nihongo.Api.Filters;
@@ -34,17 +35,26 @@ namespace Nihongo.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureMySqlContext(Configuration);
+
             services.ConfigureAuthentication(Configuration);
+
             services.ConfigureRepositoryWrapper();
+
             services.ConfigureAppServices();
+
             services.ConfigureAutoMapper();
+
             services.ConfigureValidationActionFilter();
             services.ConfigureValidateEntityExistsFilter();
+
             services.ConfigureCors();
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RoadToDevops", Version = "v1" });

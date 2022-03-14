@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nihongo.Entites.Models
+namespace Nihongo.Shared.Interfaces.Services
 {
-    public enum Role
+    public interface IPropertyService
     {
-        Admin,
-        Employee
     }
 }

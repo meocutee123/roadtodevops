@@ -28,7 +28,7 @@ namespace Nihongo.Repository.Repository
             var entity = await _dbContext.Set<T>().FindAsync(id);
             if (entity == null)
             {
-                throw new Exception("Something went wrong, please try again");
+                throw new KeyNotFoundException("Something went wrong, please try again");
             }
             await Task.FromResult(_dbContext.Remove(entity));
         }
