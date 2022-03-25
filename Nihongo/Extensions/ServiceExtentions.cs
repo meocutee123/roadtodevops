@@ -17,6 +17,8 @@ using Nihongo.Api.Mappings;
 using Nihongo.Shared.Settings;
 using Nihongo.Api.Settings;
 using Nihongo.Shared.Interfaces.Services;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace Nihongo.Api.Extensions
 {
@@ -28,6 +30,42 @@ namespace Nihongo.Api.Extensions
                     o.UseSqlServer(
                         configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RoadToDevops", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                                  Enter 'Bearer' [space] and then your token in the text input below.
+                                  \r\n\r\nExample: 'Bearer 12345abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                  {
+                    {
+                      new OpenApiSecurityScheme
+                      {
+                        Reference = new OpenApiReference
+                          {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                          },
+                          Scheme = "oauth2",
+                          Name = "Bearer",
+                          In = ParameterLocation.Header,
+                      },
+                      new List<string>()
+                    }
+                });
+            });
         }
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
@@ -81,6 +119,7 @@ namespace Nihongo.Api.Extensions
 
 
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IJwtService, JwtService>();
         }
         public static void ConfigureAutoMapper(this IServiceCollection services)

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -21,7 +22,6 @@ namespace Nihongo.Entites.Models
         public virtual DbSet<Landlord> Landlords { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Property> Properties { get; set; }
-        public virtual DbSet<Amenity> Amenities { get; set; }
         public virtual DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,9 +31,38 @@ namespace Nihongo.Entites.Models
                 optionsBuilder.UseSqlServer("Server=NTUANNGHIA\\SQLEXPRESS;Database=Nihongo;Trusted_Connection=true;");
             }
         }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Property>()
+            .HasOne(s => s.CreatedByAccount)
+            .WithMany(g => g.PropertiesCreatedBy)
+            .HasForeignKey(s => s.CreatedBy);
 
+            modelBuilder.Entity<Property>()
+            .HasOne(s => s.ModifiedByAccount)
+            .WithMany(g => g.PropertiesModifiedBy)
+            .HasForeignKey(s => s.LastModifiedBy);
+
+            modelBuilder.Entity<Building>()
+            .HasOne(s => s.CreatedByAccount)
+            .WithMany(g => g.BuildingsCreatedBy)
+            .HasForeignKey(s => s.CreatedBy);
+
+            modelBuilder.Entity<Building>()
+            .HasOne(s => s.ModifiedByAccount)
+            .WithMany(g => g.BuildingsModifiedBy)
+            .HasForeignKey(s => s.LastModifiedBy);
+
+            modelBuilder.Entity<Landlord>()
+            .HasOne(s => s.CreatedByAccount)
+            .WithMany(g => g.LandlordsCreatedBy)
+            .HasForeignKey(s => s.CreatedBy);
+
+            modelBuilder.Entity<Landlord>()
+            .HasOne(s => s.ModifiedByAccount)
+            .WithMany(g => g.LandlordsModifiedBy)
+            .HasForeignKey(s => s.LastModifiedBy);
         }
     }
 }

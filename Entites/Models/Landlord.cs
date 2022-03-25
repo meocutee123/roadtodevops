@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Entites.Models
 {
-    public class Landlord : IEntity
+    public class Landlord : AuditableEntity, IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,7 +23,6 @@ namespace Nihongo.Entites.Models
         public PreferredContactMethod PreferredContactMethod { get; set; }
 
         public List<LandlordOtherDetail> LandlordOtherDetail { get; set; }
-        [JsonIgnore]
         public virtual ICollection<Property> Properties { get; set; }
     }
 }

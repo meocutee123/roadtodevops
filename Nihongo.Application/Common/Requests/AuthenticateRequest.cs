@@ -10,7 +10,8 @@ namespace Nihongo.Application.Common.Requests
     public class AuthenticateRequest
     {
         [Required]
-        public string Username { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string EmailAddress { get; set; }
 
         [Required]
         public string Password { get; set; }

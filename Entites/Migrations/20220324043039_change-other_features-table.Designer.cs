@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220324043039_change-other_features-table")]
+    partial class changeother_featurestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +225,7 @@ namespace Nihongo.Entites.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("HighLights")
+                    b.Property<string>("HighLight")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LandlordId")

@@ -24,7 +24,7 @@ namespace Nihongo.Api.Extensions
 
         public async Task Invoke(HttpContext context, NihongoContext dataContext)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers["authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
                 await AttachAccountToContext(context, dataContext, token);

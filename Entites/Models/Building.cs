@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Entites.Models
 {
-    public class Building : IEntity
+    public class Building : AuditableEntity, IEntity
     {
         public int Id { get; set; }
         public string Street { get; set; }

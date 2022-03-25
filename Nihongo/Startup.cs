@@ -45,6 +45,7 @@ namespace Nihongo.Api
             services.ConfigureAutoMapper();
 
             services.ConfigureValidationActionFilter();
+
             services.ConfigureValidateEntityExistsFilter();
 
             services.ConfigureCors();
@@ -52,13 +53,9 @@ namespace Nihongo.Api
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RoadToDevops", Version = "v1" });
-            });
+            services.ConfigureSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

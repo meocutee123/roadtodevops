@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220324065135_change-property-column__highlights")]
+    partial class changepropertycolumn__highlights
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

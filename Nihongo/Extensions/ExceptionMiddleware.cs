@@ -1,13 +1,14 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using Nihongo.Application.Helpers;
+using Nihongo.Shared.Exceptions;
 using Nihongo.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Nihongo.Shared.Exceptions
+namespace Nihongo.Api.Extensions
 {
     public class ExceptionMiddleware
     {
@@ -40,6 +41,7 @@ namespace Nihongo.Shared.Exceptions
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
                 ForbiddenAccessException => (int)HttpStatusCode.Forbidden,
                 AppException => (int)HttpStatusCode.BadRequest,
+                ArgumentNullException => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError,// unhandled error
             };
 

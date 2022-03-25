@@ -22,9 +22,9 @@ namespace Nihongo.Api.Filters
             {
                 var id = (int)context.ActionArguments["id"];
                 var entity = await _context.Set<T>().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
-                if (entity == null)
+                if (entity is null)
                 {
-                    context.Result = new NotFoundObjectResult($"Entity with id ${id} does not exist");
+                    context.Result = new NotFoundObjectResult($"Entity with id {id} does not exist!");
                 }
                 else
                 {

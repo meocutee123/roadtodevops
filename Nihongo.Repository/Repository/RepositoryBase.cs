@@ -26,9 +26,9 @@ namespace Nihongo.Repository.Repository
         public async Task DeleteAsync(int id)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id);
-            if (entity == null)
+            if (entity is null)
             {
-                throw new KeyNotFoundException("Something went wrong, please try again");
+                throw new KeyNotFoundException($"[Repository base - Delete] Entity not found!");
             }
             await Task.FromResult(_dbContext.Remove(entity));
         }

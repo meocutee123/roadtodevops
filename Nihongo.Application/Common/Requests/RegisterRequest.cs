@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nihongo.Entites.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace Nihongo.Application.Common.Requests
 {
     public class RegisterRequest
     {
-
+        [Required]
+        public AccountType Type { get; set; }
         [Required]
         public string FirstName { get; set; }
 

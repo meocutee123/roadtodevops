@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Shared.Interfaces.Reposiroty
 {
-    public interface IPropertyRepository : IRepositoryBase<Property>
+    public interface ILandlordRepository : IRepositoryBase<Landlord>
     {
-        Task<List<Property>> GetAllPropertyAsync();
-        Task<Property> GetByKeyAsync(int key);
     }
 }

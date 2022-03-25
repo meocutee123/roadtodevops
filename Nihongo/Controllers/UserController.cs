@@ -50,7 +50,7 @@ namespace Nihongo.Api.Controllers
         public async Task<AccountResponse> Find(string emailAddress)
         {
             var user =  _mapper.Map<AccountResponse>(await _repository.Account.FindAsync(x => x.Email == emailAddress));
-            if (user == null) throw new KeyNotFoundException($"Cannot find user with email: {emailAddress}");
+            if (user is null) throw new KeyNotFoundException($"Cannot find user with email: {emailAddress}");
             return user;
         }
 

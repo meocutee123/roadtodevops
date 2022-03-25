@@ -1,5 +1,4 @@
-﻿using Nihongo.Shared.Common.Requests;
-using Nihongo.Shared.DTOs;
+﻿using Nihongo.Entites.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Nihongo.Shared.Interfaces.Services
 {
-    public interface IPropertyService
+    public interface ICookieService
     {
-        Task AddAsync(AddPropertyRequest request);
+        Account ActiveAccount();
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220324041554_change-amenities-table")]
+    partial class changeamenitiestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +225,7 @@ namespace Nihongo.Entites.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("HighLights")
+                    b.Property<string>("HighLight")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LandlordId")
@@ -403,6 +405,32 @@ namespace Nihongo.Entites.Migrations
                         .WithMany("PropertiesModifiedBy")
                         .HasForeignKey("LastModifiedBy");
 
+                    b.OwnsMany("Nihongo.Entites.Models.OtherFeature", "OtherFeatures", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Description")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("PropertyId")
+                                .HasColumnType("int");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PropertyId");
+
+                            b1.ToTable("OtherFeature");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId");
+                        });
+
                     b.OwnsMany("Nihongo.Entites.Models.PropertyAdditionalInformation", "AdditionalInformation", b1 =>
                         {
                             b1.Property<int>("Id")
@@ -456,35 +484,6 @@ namespace Nihongo.Entites.Migrations
                             b1.HasIndex("PropertyId");
 
                             b1.ToTable("PropertyAmenity");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PropertyId");
-                        });
-
-                    b.OwnsMany("Nihongo.Entites.Models.PropertyOtherFeature", "OtherFeatures", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<int>("PropertyId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("PropertyId");
-
-                            b1.ToTable("PropertyOtherFeature");
 
                             b1.WithOwner()
                                 .HasForeignKey("PropertyId");

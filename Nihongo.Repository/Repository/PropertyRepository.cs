@@ -18,14 +18,24 @@ namespace Nihongo.Repository.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<Property> GetAllPropertyAsync()
+        public async Task<List<Property>> GetAllPropertyAsync()
         {
             return await _dbContext.Properties
                 .Include(p => p.Building)
                 .Include(p => p.Landlord)
                 .Include(p => p.Amenities)
                 .Include(p => p.Images)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+        }
+
+        public async Task<Property> GetByKeyAsync(int key)
+        {
+            return await _dbContext.Properties
+               .Where(x => x.Id == key)
+               .Include(p => p.Building)
+               .Include(p => p.Landlord)
+               .Include(p => p.Amenities)
+               .Include(p => p.Images).FirstOrDefaultAsync();
         }
     }
 }

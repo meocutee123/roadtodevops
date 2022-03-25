@@ -29,7 +29,7 @@ namespace Nihongo.Api.Extensions.Authorization
 
             // authorization
             var user = (Account)context.HttpContext.Items["Account"];
-            if (user == null || _roles.Any() && !_roles.Contains(user.Role))
+            if (user is null || _roles.Any() && !_roles.Contains(user.Role))
             {
                 // not logged in or role not authorized
                 throw new ForbiddenAccessException("Access denied!");

@@ -43,7 +43,7 @@ namespace Nihongo.Repository.Services
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var account = await _repository.Account.FindAsync(x => x.Email == model.Username);
+            var account = await _repository.Account.FindAsync(x => x.Email == model.EmailAddress);
 
             if (account == null /*|| !account.IsVerified*/ || !BC.Verify(model.Password, account.PasswordHash))
                 throw new UnauthorizedAccessException("The logon attempt failed");
@@ -124,6 +124,7 @@ namespace Nihongo.Repository.Services
             // first registered account is an admin
             var isFirstAccount = await _repository.Account.GetAll().AnyAsync();
             account.Role = !isFirstAccount ? Role.Admin: Role.Employee;
+            account.Type = model.Type;
             account.Created = DateTime.UtcNow;
             account.VerificationToken = _jwtService.RandomTokenString(35);
 

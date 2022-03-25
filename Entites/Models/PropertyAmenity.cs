@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nihongo.Entites.Nihongo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,12 +11,13 @@ using System.Threading.Tasks;
 namespace Nihongo.Entites.Models
 {
     [Owned]
-    public class OtherFeature
+    public class PropertyAmenity : IEntity
     {
         [Key]
         [JsonIgnore]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Label { get; set; }
+        public string FieldAlias { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nihongo.Entites.Models;
 
 namespace Nihongo.Entites.Migrations
 {
     [DbContext(typeof(NihongoContext))]
-    partial class NihongoContextModelSnapshot : ModelSnapshot
+    [Migration("20220318035333_add-auditable_entity")]
+    partial class addauditable_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("AmenityProperty", b =>
+                {
+                    b.Property<int>("AmenitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertiesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AmenitiesId", "PropertiesId");
+
+                    b.HasIndex("PropertiesId");
+
+                    b.ToTable("AmenityProperty");
+                });
 
             modelBuilder.Entity("ImageProperty", b =>
                 {
@@ -83,6 +100,21 @@ namespace Nihongo.Entites.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("Nihongo.Entites.Models.Amenity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Desciption")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Amenities");
                 });
 
             modelBuilder.Entity("Nihongo.Entites.Models.Building", b =>
@@ -223,7 +255,7 @@ namespace Nihongo.Entites.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("HighLights")
+                    b.Property<string>("HighLight")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LandlordId")
@@ -252,6 +284,21 @@ namespace Nihongo.Entites.Migrations
                     b.HasIndex("LastModifiedBy");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("AmenityProperty", b =>
+                {
+                    b.HasOne("Nihongo.Entites.Models.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Nihongo.Entites.Models.Property", null)
+                        .WithMany()
+                        .HasForeignKey("PropertiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ImageProperty", b =>
@@ -403,6 +450,32 @@ namespace Nihongo.Entites.Migrations
                         .WithMany("PropertiesModifiedBy")
                         .HasForeignKey("LastModifiedBy");
 
+                    b.OwnsMany("Nihongo.Entites.Models.OtherFeature", "OtherFeatures", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Description")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("PropertyId")
+                                .HasColumnType("int");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PropertyId");
+
+                            b1.ToTable("OtherFeature");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId");
+                        });
+
                     b.OwnsMany("Nihongo.Entites.Models.PropertyAdditionalInformation", "AdditionalInformation", b1 =>
                         {
                             b1.Property<int>("Id")
@@ -432,67 +505,7 @@ namespace Nihongo.Entites.Migrations
                                 .HasForeignKey("PropertyId");
                         });
 
-                    b.OwnsMany("Nihongo.Entites.Models.PropertyAmenity", "Amenities", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<int>("PropertyId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("PropertyId");
-
-                            b1.ToTable("PropertyAmenity");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PropertyId");
-                        });
-
-                    b.OwnsMany("Nihongo.Entites.Models.PropertyOtherFeature", "OtherFeatures", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("FieldAlias")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Label")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<int>("PropertyId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("PropertyId");
-
-                            b1.ToTable("PropertyOtherFeature");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PropertyId");
-                        });
-
                     b.Navigation("AdditionalInformation");
-
-                    b.Navigation("Amenities");
 
                     b.Navigation("Building");
 
